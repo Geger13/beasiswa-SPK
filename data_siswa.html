@@ -92,9 +92,10 @@
     <script src="supabase_config.js"></script>
 
     <script>
-        // Cek Login (Sederhana: Cek localStorage atau Session Supabase)
-        // Untuk demo ini kita anggap sudah login, atau gunakan supabase.auth.getSession()
+        // Cek Login
+        if (!localStorage.getItem('session_admin')) window.location.href = 'login.html';
         document.getElementById('main-content').classList.remove('hidden');
+        
         loadSiswa();
 
         // Load Data
@@ -131,6 +132,13 @@
             
             // Hapus id_siswa dari object jika kosong (untuk insert)
             if (!id) delete formProps.id_siswa;
+
+            // Konversi string ke number untuk kolom nilai
+            for (let key in formProps) {
+                if (key !== 'nama' && key !== 'id_siswa') {
+                    formProps[key] = Number(formProps[key]);
+                }
+            }
 
             let error;
             if (id) {
@@ -199,7 +207,10 @@
         }
 
         // Logout sederhana
-        async function logout() { window.location.href = 'login.html'; }
+        async function logout() { 
+            localStorage.removeItem('session_admin');
+            window.location.href = 'login.html'; 
+        }
     </script>
 </body>
 </html>

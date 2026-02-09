@@ -39,6 +39,7 @@
     <script>
         let configData = {};
 
+        if (!localStorage.getItem('session_admin')) window.location.href = 'login.html';
         document.getElementById('main-content').classList.remove('hidden');
         loadConfig();
 
@@ -96,7 +97,10 @@
             else alert('Konfigurasi berhasil disimpan!');
         });
 
-        async function logout() { window.location.href = 'login.html'; }
+        async function logout() { 
+            localStorage.removeItem('session_admin');
+            window.location.href = 'login.html'; 
+        }
     </script>
 </body>
 </html>

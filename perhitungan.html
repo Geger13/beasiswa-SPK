@@ -60,6 +60,7 @@
 
     <script src="supabase_config.js"></script>
     <script>
+        if (!localStorage.getItem('session_admin')) window.location.href = 'login.html';
         document.getElementById('main-content').classList.remove('hidden');
         loadPerhitungan();
 
@@ -131,7 +132,10 @@
                     </tr>`;
             });
         }
-        async function logout() { window.location.href = 'login.html'; }
+        async function logout() { 
+            localStorage.removeItem('session_admin');
+            window.location.href = 'login.html'; 
+        }
 
         function exportExcel() {
             let table = document.querySelector("table");

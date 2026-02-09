@@ -33,11 +33,15 @@
 
     <script>
         // Cek Session saat load
-        // Untuk sementara bypass atau gunakan Supabase Auth nanti
+        if (!localStorage.getItem('session_admin')) {
+            window.location.href = 'login.html';
+        }
+
         document.getElementById('username-display').innerText = "Admin";
         document.getElementById('main-content').classList.remove('hidden');
 
         async function logout() {
+            localStorage.removeItem('session_admin');
             window.location.href = 'login.html';
         }
     </script>

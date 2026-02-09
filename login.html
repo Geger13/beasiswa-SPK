@@ -40,6 +40,7 @@
             // LOGIKA LOGIN BARU (Tanpa api.php/MySQL)
             // 1. Cek Hardcoded untuk Admin (Sederhana untuk Demo)
             if (username === 'admin' && password === 'admin') {
+                localStorage.setItem('session_admin', 'true'); // Simpan sesi login
                 window.location.href = 'dashboard.html';
                 return;
             }
