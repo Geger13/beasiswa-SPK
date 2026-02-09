@@ -7,29 +7,74 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 font-sans leading-normal tracking-normal hidden" id="main-content">
-    <nav class="bg-blue-600 p-4 shadow-md">
-        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <a href="dashboard.html" class="text-white text-xl font-bold">SPK Beasiswa</a>
+    <nav class="bg-blue-600 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="dashboard.html" class="text-white text-xl font-bold flex items-center gap-2">
+                    🎓 SPK Beasiswa
+                </a>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMenu()" class="text-white focus:outline-none hover:text-blue-200">
+                        <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-4 items-center">
+                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition shadow-md text-sm font-bold">Logout</button>
+                </div>
             </div>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="data_siswa.html" class="text-blue-100 hover:text-white transition">Kelola Data Siswa</a>
-                <a href="kriteria.html" class="text-blue-100 hover:text-white transition">Kelola Kriteria</a>
-                <a href="ahp.html" class="text-blue-100 hover:text-white transition">Hitung AHP</a>
-                <a href="perhitungan.html" class="text-blue-100 hover:text-white transition">Proses Perhitungan</a>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition shadow">Logout</button>
+
+            <!-- Mobile Menu (Hidden by default) -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 border-t border-blue-500 pt-4">
+                <div class="flex flex-col space-y-3">
+                    <button onclick="logout()" class="w-full text-left bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition shadow mt-2">Logout</button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto mt-10 p-6">
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">Sistem Pendukung Keputusan Seleksi Beasiswa</h1>
-            <p class="text-gray-500 mb-6">Metode AHP & Profile Matching</p>
-            <hr class="border-gray-200 mb-6">
+    <div class="container mx-auto mt-8 p-6">
+        <!-- Welcome Banner -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-600">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Sistem Pendukung Keputusan Seleksi Beasiswa</h1>
+            <p class="text-gray-500 mb-4">Metode AHP & Profile Matching</p>
             
-            <h3 class="text-xl text-gray-700 mb-4">Selamat Datang, <span id="username-display" class="font-semibold text-blue-600">...</span></h3>
-            <p class="text-gray-600 leading-relaxed">Gunakan menu navigasi di atas untuk mengelola data siswa dan melihat hasil seleksi beasiswa.</p>
+            <div class="flex items-center gap-2 text-gray-700 bg-blue-50 p-4 rounded-lg">
+                <span>👋</span>
+                <h3 class="text-lg">Selamat Datang, <span id="username-display" class="font-bold text-blue-600">...</span></h3>
+            </div>
+        </div>
+
+        <!-- Quick Stats / Menu Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="data_siswa.html" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 group">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition">📂</div>
+                <h3 class="font-bold text-gray-800 text-lg">Data Siswa</h3>
+                <p class="text-sm text-gray-500 mt-2">Input dan kelola data calon penerima beasiswa.</p>
+            </a>
+
+            <a href="kriteria.html" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 group">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-green-600 group-hover:text-white transition">⚙️</div>
+                <h3 class="font-bold text-gray-800 text-lg">Kriteria</h3>
+                <p class="text-sm text-gray-500 mt-2">Atur bobot dan target nilai kriteria.</p>
+            </a>
+
+            <a href="ahp.html" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 group">
+                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition">🧮</div>
+                <h3 class="font-bold text-gray-800 text-lg">Hitung AHP</h3>
+                <p class="text-sm text-gray-500 mt-2">Analisis bobot prioritas antar kriteria.</p>
+            </a>
+
+            <a href="perhitungan.html" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 border border-gray-100 group">
+                <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center text-2xl mb-4 group-hover:bg-yellow-600 group-hover:text-white transition">🏆</div>
+                <h3 class="font-bold text-gray-800 text-lg">Hasil Seleksi</h3>
+                <p class="text-sm text-gray-500 mt-2">Lihat ranking dan cetak laporan akhir.</p>
+            </a>
         </div>
     </div>
 
@@ -45,6 +90,11 @@
         async function logout() {
             localStorage.removeItem('session_admin');
             window.location.href = 'login.html';
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         }
     </script>
 </body>
