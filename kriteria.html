@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Kriteria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50 font-sans hidden" id="main-content">
+    <nav class="bg-blue-600 p-4 shadow-md mb-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="dashboard.html" class="text-white text-xl font-bold">SPK Beasiswa</a>
+            <div class="space-x-4">
+                <a href="dashboard.html" class="text-blue-100 hover:text-white transition">Dashboard</a>
+                <a href="data_siswa.html" class="text-blue-100 hover:text-white transition">Kelola Data Siswa</a>
+                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition shadow">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Kelola Kriteria & Bobot</h2>
+            <p class="mb-4 text-gray-600">Atur bobot aspek dan nilai target ideal untuk setiap kriteria.</p>
+            
+            <form id="formKriteria">
+                <div id="container-kriteria" class="space-y-6">
+                    <!-- Diisi oleh JS -->
+                </div>
+                <div class="mt-8">
+                    <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded hover:bg-blue-700 transition shadow">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="supabase_config.js"></script>
+    <script>
+        let configData = {};
+
+        document.getElementById('main-content').classList.remove('hidden');
+        loadConfig();
+
+        async function loadConfig() {
+            const { data } = await supabase.from('settings').select('content').eq('name', 'kriteria_config').single();
+            configData = JSON.parse(data.content);
+            renderForm();
+        }
+
+        function renderForm() {
+            const container = document.getElementById('container-kriteria');
+            container.innerHTML = '';
+
+            for (const [aspek, detail] of Object.entries(configData)) {
+                let html = `
+                <div class="border border-gray-200 rounded-lg p-6 bg-gray-50">
+                    <div class="flex justify-between items-center mb-4 border-b pb-2">
+                        <h3 class="text-xl font-bold capitalize text-gray-800">${aspek}</h3>
+                        <div class="flex items-center gap-2">
+                            <label class="text-sm font-bold">Bobot Aspek:</label>
+                            <input type="number" step="0.01" class="w-20 p-1 border rounded" value="${detail.bobot}" onchange="configData['${aspek}'].bobot = parseFloat(this.value)">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-blue-600 mb-2">Core Factor (Target)</h4>
+                            ${renderInputs(aspek, 'core', detail.core)}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-green-600 mb-2">Secondary Factor (Target)</h4>
+                            ${renderInputs(aspek, 'secondary', detail.secondary)}
+                        </div>
+                    </div>
+                </div>`;
+                container.innerHTML += html;
+            }
+        }
+
+        function renderInputs(aspek, type, items) {
+            let html = '';
+            for (const [key, val] of Object.entries(items)) {
+                html += `<div class="flex justify-between items-center mb-2">
+                            <span class="capitalize text-sm text-gray-700 w-1/2">${key.replace(/_/g, ' ')}</span>
+                            <input type="number" class="w-20 p-1 border rounded text-center" value="${val}" onchange="configData['${aspek}']['${type}']['${key}'] = parseInt(this.value)">
+                         </div>`;
+            }
+            return html;
+        }
+
+        document.getElementById('formKriteria').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const { error } = await supabase.from('settings').update({ content: JSON.stringify(configData) }).eq('name', 'kriteria_config');
+            
+            if(error) alert('Gagal menyimpan: ' + error.message);
+            else alert('Konfigurasi berhasil disimpan!');
+        });
+
+        async function logout() { window.location.href = 'login.html'; }
+    </script>
+</body>
+</html>
