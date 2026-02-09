@@ -9,9 +9,11 @@
 </head>
 <body class="bg-gray-50 font-sans hidden" id="main-content">
     <nav class="bg-blue-600 p-4 shadow-md mb-8">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="dashboard.html" class="text-white text-xl font-bold">SPK Beasiswa</a>
-            <div class="space-x-4">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <a href="dashboard.html" class="text-white text-xl font-bold">SPK Beasiswa</a>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4">
                 <a href="dashboard.html" class="text-blue-100 hover:text-white transition">Dashboard</a>
                 <a href="data_siswa.html" class="text-blue-100 hover:text-white transition">Kelola Data Siswa</a>
                 <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition shadow">Logout</button>
@@ -32,6 +34,14 @@
                     <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded hover:bg-blue-700 transition shadow">Simpan Perubahan</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+        <div class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
+            <span id="toast-icon" class="text-xl"></span>
+            <span id="toast-message" class="font-medium"></span>
         </div>
     </div>
 
@@ -93,13 +103,28 @@
             e.preventDefault();
             const { error } = await supabase.from('settings').update({ content: JSON.stringify(configData) }).eq('name', 'kriteria_config');
             
-            if(error) alert('Gagal menyimpan: ' + error.message);
-            else alert('Konfigurasi berhasil disimpan!');
+            if(error) showToast('Gagal menyimpan: ' + error.message, true);
+            else showToast('Konfigurasi berhasil disimpan!');
         });
 
         async function logout() { 
             localStorage.removeItem('session_admin');
             window.location.href = 'login.html'; 
+        }
+
+        // Fungsi Toast Notifikasi
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-message');
+            const icon = document.getElementById('toast-icon');
+            const container = toast.querySelector('div');
+
+            msg.innerText = message;
+            icon.innerText = isError ? '❌' : '✅';
+            container.className = isError ? "bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3" : "bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3";
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
     </script>
 </body>
